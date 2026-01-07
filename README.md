@@ -1,2 +1,2 @@
-# Lucky-XD2
-A simple WhatsApp bot to manage groups
+# Yalla-Ludo
+Game For Fun: Yalla Ludo

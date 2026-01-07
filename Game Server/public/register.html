@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YALLA FUN | Register</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: transparent; /* مهم */
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ===== STARS CANVAS ===== */
+    #bg-stars {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at top, #0f2027, #000);
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      width: 360px;
+      padding: 30px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,255,204,0.25);
+      z-index: 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #00ffcc, #00bfa5);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,255,204,0.7);
+    }
+
+    .error {
+      margin-top: 12px;
+      font-size: 13px;
+      text-align: center;
+      color: #ff4d4d;
+    }
+
+    a {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      font-size: 13px;
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 🌌 STARS -->
+  <canvas id="bg-stars"></canvas>
+
+  <!-- REGISTER CARD -->
+  <div class="card">
+    <h2>Create Account</h2>
+
+    <input type="text" id="username" placeholder="Username" />
+    <input type="text" id="phone" placeholder="Phone Number" />
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="text" id="favorite" placeholder="Favorite Game / Color" />
+    <input type="password" id="password" placeholder="Password" />
+
+    <button onclick="register()">Register</button>
+
+    <div id="error" class="error"></div>
+
+    <a href="/login.html">Already have an account?</a>
+  </div>
+
+  <!-- ⭐ STARS SCRIPT -->
+  <script src="js/stars.js"></script>
+
+  <!-- REGISTER LOGIC -->
+  <script>
+    async function register() {
+      const username = document.getElementById("username").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const favorite = document.getElementById("favorite").value.trim();
+      const password = document.getElementById("password").value;
+
+      const errorBox = document.getElementById("error");
+      errorBox.textContent = "";
+
+      if (!username || !password) {
+        errorBox.textContent = "Username and Password are required";
+        return;
+      }
+
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          password,
+          phone,
+          email,
+          favorite
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorBox.textContent = data.msg || "Register failed";
+        return;
+      }
+
+      alert("Account created successfully!");
+      location.href = "/login.html";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YALLA FUN | Download</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    .menu a {
+      color: #fff;
+      margin-left: 15px;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover {
+      background: rgba(0,255,204,0.15);
+      color: #00ffcc;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    /* ===== DOWNLOAD CARD ===== */
+    .download-card {
+      width: 480px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 35px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 0 40px rgba(0,255,204,0.25);
+      text-align: center;
+    }
+
+    .download-card h1 {
+      color: #00ffcc;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(0,255,204,0.4);
+    }
+
+    .download-card p {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    /* ===== DOWNLOAD BUTTON ===== */
+    .btn-download {
+      width: 100%;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: bold;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #00ffcc, #00bfa5);
+      color: #000;
+      box-shadow: 0 0 35px rgba(0,255,204,0.8);
+      transition: 0.25s;
+    }
+
+    .btn-download:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 50px rgba(0,255,204,1);
+    }
+
+    /* ===== INFO ===== */
+    .info {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .info h3 {
+      color: #00ffcc;
+      margin-bottom: 10px;
+    }
+
+    .info ul {
+      padding-left: 18px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .info li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      background: rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="logo">YALLA FUN</div>
+    <div class="menu">
+      <a href="/home.html">Home</a>
+      <a href="/index.html">Profile</a>
+      <a href="/download.html">Download</a>
+      <a href="https://discord.gg/YOUR_SERVER" target="_blank">Support</a>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD -->
+  <div class="container">
+    <div class="download-card">
+
+      <h1>Download YALLA FUN</h1>
+      <p>
+        Get the latest version of YALLA FUN and start playing
+        with players from all over the world.
+      </p>
+
+      <button class="btn-download" onclick="downloadGame()">
+        ⬇ Download Game
+      </button>
+
+      <div class="info">
+        <h3>System Requirements</h3>
+        <ul>
+          <li>OS: Windows 10 / 11</li>
+          <li>Processor: Intel i3 or higher</li>
+          <li>Memory: 4 GB RAM</li>
+          <li>Graphics: Integrated GPU</li>
+          <li>Storage: 500 MB available</li>
+        </ul>
+
+        <h3>Game Info</h3>
+        <ul>
+          <li>Version: 1.0.0</li>
+          <li>Mode: Online Multiplayer</li>
+          <li>Last Update: 2026</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    © 2026 YALLA FUN — All rights reserved
+  </footer>
+
+  <script>
+    function downloadGame() {
+      // غير اللينك ده بملف اللعبة الحقيقي
+      window.location.href = "/files/YALLA_FUN_Setup.exe";
+    }
+  </script>
+
+</body>
+</html>

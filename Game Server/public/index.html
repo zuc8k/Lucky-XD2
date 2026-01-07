@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YALLA FUN | Profile</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: transparent;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    body.page-enter {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    body.page-exit {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+
+    /* ===== STARS ===== */
+    #bg-stars {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at top, #0f2027, #000);
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    .menu a {
+      color: #fff;
+      margin-left: 15px;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: 0.25s;
+    }
+
+    .menu a:hover {
+      background: rgba(0,255,204,0.15);
+      color: #00ffcc;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    /* ===== PROFILE CARD ===== */
+    .profile-card {
+      width: 420px;
+      padding: 30px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 0 40px rgba(0,255,204,0.2);
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00ffcc, #00bfa5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+      margin: 0 auto 10px;
+      color: #000;
+      box-shadow: 0 0 25px rgba(0,255,204,0.7);
+    }
+
+    .username {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .rank {
+      font-size: 14px;
+      color: #00ffcc;
+      margin-top: 4px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.07);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      transition: 0.25s;
+    }
+
+    .stat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(0,255,204,0.4);
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .stat strong {
+      font-size: 18px;
+      color: #00ffcc;
+    }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, #00ffcc, #00bfa5);
+      color: #000;
+      box-shadow: 0 0 25px rgba(0,255,204,0.6);
+    }
+
+    .btn-logout {
+      background: linear-gradient(135deg, #ff4d4d, #c0392b);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="bg-stars"></canvas>
+
+<div class="navbar">
+  <div class="logo">YALLA FUN</div>
+  <div class="menu">
+    <a href="/home.html">Home</a>
+    <a href="/download.html">Download</a>
+    <a href="https://discord.gg/YOUR_SERVER" target="_blank">Support</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar" id="avatar">?</div>
+      <div class="username" id="username">Loading...</div>
+      <div class="rank" id="rank">Rank</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span>Coins</span><strong id="coins">0</strong></div>
+      <div class="stat"><span>Gems</span><strong id="gems">0</strong></div>
+      <div class="stat"><span>Level</span><strong id="level">1</strong></div>
+      <div class="stat"><span>Wins</span><strong id="wins">0</strong></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-play" onclick="playNow()">Play Now</button>
+      <button class="btn btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/stars.js"></script>
+
+<script>
+  window.addEventListener("load", () => {
+    document.body.classList.add("page-enter");
+  });
+
+  const token = localStorage.getItem("token");
+  if (!token) location.href = "/auth.html";
+
+  const socket = io({
+    auth: { token }
+  });
+
+  fetch("/api/user/me", {
+    headers: { Authorization: "Bearer " + token }
+  })
+  .then(r => r.json())
+  .then(user => {
+    avatar.innerText = user.username[0].toUpperCase();
+    username.innerText = user.username;
+    rank.innerText = (user.rankBadge || "🥉") + " " + (user.rank || "Bronze");
+    coins.innerText = user.coins ?? 0;
+    gems.innerText = user.gems ?? 0;
+    level.innerText = user.level ?? 1;
+    wins.innerText = user.wins ?? 0;
+  });
+
+  function playNow() {
+    locaton.href = "/game.html";
+    socket.emit("find_match");
+    alert("🔍 Searching for players...");
+  }
+
+  socket.on("match_found", ({ roomId }) => {
+    window.location.href = `/game.html?room=${roomId}`;
+  });
+
+  function logout() {
+    localStorage.removeItem("token");
+    location.href = "/auth.html";
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YALLA FUN | Lobby</title>
+
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+      background: radial-gradient(circle at top, #0f3d2e, #000);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lobby-card {
+      width: 380px;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,255,204,0.25);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00ffcc;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 25px;
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .mode-btn {
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .status {
+      display: none;
+      color: #00ffcc;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="lobby-card">
+    <div class="logo">LUDO</div>
+    <div class="subtitle">Choose how you want to play</div>
+
+    <div class="modes">
+      <button class="mode-btn" onclick="startMatch(2)">🎲 2 Players</button>
+      <button class="mode-btn" onclick="startMatch(4)">👥 4 Players</button>
+    </div>
+
+    <div class="status" id="status">
+      Searching for players...
+    </div>
+
+    <button class="mode-btn" onclick="goBack()">⬅ Back</button>
+  </div>
+
+  <!-- ✅ SOCKET + LOGIC (اللي انت بعته) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) location.href = "/login.html";
+
+    const socket = io({
+      auth: { token }
+    });
+
+    let searching = false;
+
+    function startMatch(players) {
+      if (searching) return;
+      searching = true;
+
+      document.getElementById("status").style.display = "block";
+      socket.emit("find_match", { players });
+    }
+
+    socket.on("queue_joined", (data) => {
+      console.log("Queued:", data);
+    });
+
+    socket.on("match_found", ({ roomId }) => {
+      location.href = "/game.html?room=" + roomId;
+    });
+
+    function goBack() {
+      socket.emit("cancel_match");
+      location.href = "/index.html";
+    }
+  </script>
+
+</body>
+</html>

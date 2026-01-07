@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YALLA FUN | Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #00ffcc;
+      font-family: Arial;
+      overflow: hidden;
+    }
+    #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    canvas {
+      background: #111;
+      border: 2px solid #00ffcc;
+      margin-top: 15px;
+    }
+    .back-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: red;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="goBack()">⟵ Exit</button>
+
+<div id="game-container">
+  <div id="status">Waiting for players...</div>
+  <canvas id="gameCanvas" width="800" height="500"></canvas>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const token = localStorage.getItem("token");
+  if (!token) location.href = "/login.html";
+
+  const params = new URLSearchParams(location.search);
+  const roomId = params.get("room");
+
+  const socket = io({ auth: { token } });
+
+  const statusText = document.getElementById("status");
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  socket.emit("join_ludo_room", { roomId });
+
+  socket.on("ludo_start", (data) => {
+    statusText.innerText =
+      `🎮 Game Started | Players: ${data.playersCount}`;
+
+    draw(data.playersCount);
+  });
+
+  socket.on("connect_error", () => {
+    statusText.innerText = "Connection error";
+  });
+
+  function draw(players) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#00ffcc";
+    ctx.font = "24px Arial";
+    ctx.fillText(
+      `Players in room: ${players}`,
+      260,
+      250
+    );
+  }
+
+  function goBack() {
+    location.href = "/index.html";
+  }
+</script>
+
+</body>
+</html>

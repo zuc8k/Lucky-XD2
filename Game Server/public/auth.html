@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YALLA FUN | Auth</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    #bg-stars {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at top, #0f2027, #000);
+    }
+
+    .card {
+      width: 420px;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px rgba(0,255,204,.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    input::placeholder { color: #aaa; }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      background: linear-gradient(135deg, #00ffcc, #00bfa5);
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      opacity: 0.6;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      opacity: 1;
+      color: #00ffcc;
+      border-color: #00ffcc;
+      font-weight: bold;
+    }
+
+    .form { display: none; }
+    .form.active { display: block; }
+
+    .error {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #ff4d4d;
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="bg-stars"></canvas>
+
+<div class="card">
+  <h2>YALLA FUN</h2>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showLogin()">Login</div>
+    <div class="tab" onclick="showRegister()">Register</div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginForm" class="form active">
+    <input id="loginUser" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button id="loginBtn" onclick="login()">Login</button>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="registerForm" class="form">
+    <input id="regUsername" placeholder="Username">
+    <input id="regPhone" placeholder="Phone Number">
+    <input id="regEmail" type="email" placeholder="Email">
+    <input id="regPassword" type="password" placeholder="Password">
+
+    <select id="regFavorite">
+      <option value="">Favorite Game</option>
+      <option value="Ludo">Ludo</option>
+      <option value="Chess">Chess</option>
+    </select>
+
+    <button id="registerBtn" onclick="register()">Create Account</button>
+  </div>
+
+  <div id="error" class="error"></div>
+</div>
+
+<script src="js/stars.js"></script>
+
+<script>
+  // ✅ لو متسجل خلاص
+  const token = localStorage.getItem("token");
+  if (token) {
+    location.href = "/index.html";
+  }
+
+  const errorBox = document.getElementById("error");
+
+  function showLogin() {
+    loginForm.classList.add("active");
+    registerForm.classList.remove("active");
+    document.querySelectorAll(".tab")[0].classList.add("active");
+    document.querySelectorAll(".tab")[1].classList.remove("active");
+    errorBox.innerText = "";
+  }
+
+  function showRegister() {
+    registerForm.classList.add("active");
+    loginForm.classList.remove("active");
+    document.querySelectorAll(".tab")[1].classList.add("active");
+    document.querySelectorAll(".tab")[0].classList.remove("active");
+    errorBox.innerText = "";
+  }
+
+  async function login() {
+    if (!loginUser.value || !loginPass.value) {
+      errorBox.innerText = "Fill all fields";
+      return;
+    }
+
+    loginBtn.disabled = true;
+    errorBox.innerText = "Logging in...";
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: loginUser.value,
+          password: loginPass.value
+        })
+      });
+
+      const data = await res.json();
+      loginBtn.disabled = false;
+
+      if (!res.ok) {
+        errorBox.innerText = data.msg || "Login failed";
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      location.href = "/index.html";
+
+    } catch (err) {
+      loginBtn.disabled = false;
+      errorBox.innerText = "Server error";
+    }
+  }
+
+  async function register() {
+    if (!regUsername.value || !regEmail.value || !regPassword.value) {
+      errorBox.innerText = "Fill all required fields";
+      return;
+    }
+
+    registerBtn.disabled = true;
+    errorBox.innerText = "Creating account...";
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: regUsername.value,
+          phone: regPhone.value,
+          email: regEmail.value,
+          password: regPassword.value,
+          favorite: regFavorite.value
+        })
+      });
+
+      const data = await res.json();
+      registerBtn.disabled = false;
+
+      if (!res.ok) {
+        errorBox.innerText = data.msg || "Register failed";
+        return;
+      }
+
+      errorBox.style.color = "#00ffcc";
+      errorBox.innerText = "Account created successfully ✔";
+      setTimeout(showLogin, 1200);
+
+    } catch (err) {
+      registerBtn.disabled = false;
+      errorBox.innerText = "Server error";
+    }
+  }
+</script>
+
+</body>
+</html>
