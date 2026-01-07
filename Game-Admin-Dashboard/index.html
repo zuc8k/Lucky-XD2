@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="layout">
+  <aside>
+    <h3>🎮 Game Admin</h3>
+    <button onclick="loadUsers()">Users</button>
+    <button onclick="loadCheats()">Cheat Logs</button>
+    <button onclick="loadPayments()">Payments</button>
+  </aside>
+
+  <main>
+    <h2 id="title">Dashboard</h2>
+    <div id="content"></div>
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/users.js"></script>
+<script src="js/cheats.js"></script>
+<script src="js/payments.js"></script>
+</body>
+</html>
